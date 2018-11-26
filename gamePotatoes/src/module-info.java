@@ -10,4 +10,5 @@ module gamePotatoes {
 	requires javafx.graphics;
 	requires javafx.fxml;
 	requires javafx.base;
+	exports gamePotatoes.view;
 }
