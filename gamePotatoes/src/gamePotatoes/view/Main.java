@@ -7,7 +7,7 @@ import javafx.stage.Stage;
 
 public class Main extends Application {
 
-	Panel panel = new Panel();
+	
 	Scene scene;
 
 	public static void main(String[] args) {
@@ -18,11 +18,14 @@ public class Main extends Application {
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		// TODO Auto-generated method stub
+		SizeWindow dialog = new SizeWindow();
+		NameWindow name = new NameWindow();
 
-		scene = panel.getScene();
+		Controller controller = new Controller(dialog.getSize(), name.getName(), primaryStage);
+		/*scene = controller.getPanel().getScene();
 		primaryStage.setTitle("Game of Potatoes");
 		primaryStage.setScene(scene);
-		primaryStage.show();
+		primaryStage.show();*/
 	}
 
 }

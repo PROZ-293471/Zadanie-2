@@ -7,20 +7,20 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 
-public class Board extends FlowPane{
+public class PotatoBoard extends FlowPane{
 
-	private ActionButton[][] potatoes;
+	private PotatoButton[][] potatoes;
 	private HBox[] rows;
 	private VBox vbox;
 	
 
-public Board(int size) {
-		rows = new HBox[size+1];
-		potatoes = new ActionButton[size+1][size+1];
-		for(int i=0; i<=size; i++) {
+public PotatoBoard(int size) {
+		rows = new HBox[size];
+		potatoes = new PotatoButton[size][size];
+		for(int i=0; i<size; i++) {
 			rows[i]= new HBox();
-			for(int j=0; j<i; j++) {
-				potatoes[i][j]= new ActionButton();
+			for(int j=0; j<=i; j++) {
+				potatoes[i][j]= new PotatoButton(i,j);
 				rows[i].getChildren().add(potatoes[i][j]);
 			}
 			
@@ -32,5 +32,9 @@ public Board(int size) {
 		
 
 	};
+	
+	public PotatoButton getPotatoButton(int i, int j) {
+		return potatoes[i][j];
+	}
 	
 }

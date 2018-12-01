@@ -4,10 +4,10 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 
 public class statusPanel extends VBox{
-	Label player = new Label();
-	Label result = new Label();
-	int value;
-	String name;
+	private Label player = new Label();
+	private Label result = new Label();
+	private int value;
+	private String name;
 	
 	statusPanel(String nam){
 		name = nam;
@@ -26,7 +26,13 @@ public class statusPanel extends VBox{
 		return value;
 	}
 	
+	public String getName() {
+		return name;
+	}
+	
+	
 	public void updateResult(int x) {
-		value+=x;
+		value=x;
+		update();
 	}
 }
