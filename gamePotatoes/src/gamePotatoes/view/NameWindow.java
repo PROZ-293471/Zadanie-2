@@ -13,7 +13,7 @@ String size;
 	TextInputDialog dialog;
 	
 
-	NameWindow(){
+	public NameWindow(){
 
 	dialog = new TextInputDialog("Player");
 	dialog.setTitle("Game of potatoes");

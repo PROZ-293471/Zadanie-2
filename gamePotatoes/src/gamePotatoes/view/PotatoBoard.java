@@ -1,7 +1,10 @@
 package gamePotatoes.view;
 
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Orientation;
 import javafx.scene.Scene;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
@@ -12,9 +15,10 @@ public class PotatoBoard extends FlowPane{
 	private PotatoButton[][] potatoes;
 	private HBox[] rows;
 	private VBox vbox;
-	
+	private int sizee;
 
 public PotatoBoard(int size) {
+		sizee = size;
 		rows = new HBox[size];
 		potatoes = new PotatoButton[size][size];
 		for(int i=0; i<size; i++) {
@@ -36,5 +40,6 @@ public PotatoBoard(int size) {
 	public PotatoButton getPotatoButton(int i, int j) {
 		return potatoes[i][j];
 	}
+	
 	
 }

@@ -20,15 +20,15 @@ public class Panel {
 	private statusPanel player1;
 	private statusPanel player2 = new statusPanel("player 2");
 	
-	statusPanel getStatusPanel1() {
+	public statusPanel getStatusPanel1() {
 		return player1;
 	}
 	
-	statusPanel getStatusPanel2() {
+	public statusPanel getStatusPanel2() {
 		return player2;
 	}
 	
-	Panel(int size, String name) {
+	public Panel(int size, String name) {
 		potatoBoard = new PotatoBoard(size);
 		
 		player1 = new statusPanel(name);

@@ -1,6 +1,11 @@
 package gamePotatoes.view;
 
+import javax.jms.JMSException;
 
+import gamePotatoes.controler.Consumer;
+import gamePotatoes.controler.Controler;
+import gamePotatoes.controler.MessageControler;
+import gamePotatoes.controler.Producer;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -10,8 +15,12 @@ public class Main extends Application {
 	
 	Scene scene;
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws JMSException, InterruptedException {
 
+		/*Producer producer = new Producer("localhost:4848/jms", "WSQueue");
+		Consumer consumer = new Consumer("localhost:4848/jms", "ATJQueue");
+		  producer.sendQueueMessage("POTATOE");
+		  consumer.receiveQueueMessageAsync();*/
 		launch(args);
 	}
 
@@ -21,7 +30,7 @@ public class Main extends Application {
 		SizeWindow dialog = new SizeWindow();
 		NameWindow name = new NameWindow();
 
-		Controller controller = new Controller(dialog.getSize(), name.getName(), primaryStage);
+		MessageControler controler = new MessageControler(dialog.getSize(), name.getName(), primaryStage);
 		/*scene = controller.getPanel().getScene();
 		primaryStage.setTitle("Game of Potatoes");
 		primaryStage.setScene(scene);

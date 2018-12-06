@@ -29,7 +29,7 @@ public class PotatoButton extends Button {
 
 
 	private void standardAction() {
-		Controller.move(row, column);
+		//Controller.move(row, column);
 	}
 	
 	public void crossColumn() {

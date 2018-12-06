@@ -1,8 +1,9 @@
-package gamePotatoes.view;
+package gamePotatoes.model;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import gamePotatoes.controler.Coordinates;
 import javafx.scene.layout.HBox;
 
 public class Model {
@@ -22,7 +23,7 @@ public class Model {
 	boolean doubleClicked = false;
 
 	int counterBoth = 0;
-	boolean end = false;
+	public boolean end = false;
 	
 	public boolean ifDoubleClicked() {
 		return doubleClicked;
@@ -59,7 +60,7 @@ public class Model {
 
 //konstruktor
 	public Model(int size) {
-
+		end = false;
 		board = new state[size + 1][size + 1];
 		for (int i = 0; i < size; i++) {
 			for (int j = 0; j <= i; j++) {
@@ -73,6 +74,7 @@ public class Model {
 		board[i][j] = state.BOTH;
 		toBothCross.add(Coordinates.createCoordinates(i, j));
 		counterBoth++;
+		System.out.println(counterBoth);
 	}
 	
 	private void changeStateToRowCross(int i, int j) {
@@ -87,7 +89,6 @@ public class Model {
 	private void changeStateToDot(int i, int j) {
 		board[i][j] = state.DOT;
 		toDot.add(Coordinates.createCoordinates(i, j));
-		counterBoth++;
 	}
 	//Skreœlenie 
 	private void crossRow(int i) {
@@ -141,7 +142,7 @@ public class Model {
 		return toCross;
 	}
 
-	void move(String coordinates) {
+	public void move(String coordinates, boolean player) {
 		clear();
 		int i = Coordinates.getRow(coordinates);
 		int j = Coordinates.getColumn(coordinates);
@@ -153,16 +154,25 @@ public class Model {
 		boolean row = checkRow(i);
 		if (col) {
 			crossColumn(j);
-			scorePlayer1 += (board.length - j - 1);
+			if(player) {
+				scorePlayer1 += (board.length - j - 1);}else {
+					scorePlayer2 += (board.length - j - 1);
+				}
 		}
 		if (row) {
 			crossRow(i);
-			scorePlayer1 += (i + 1);
+			if(player) {
+			scorePlayer1 += (i + 1);}else {
+				scorePlayer2 += (i + 1);
+			}
+		}
+		if(counterBoth == numberOfFields()) {
+			end = true;
 		}
 		}
 	}
 
-	void move(int i, int j) {
+	public void move(int i, int j, boolean player) {
 		
 		System.out.println(numberOfFields());
 		
@@ -176,28 +186,37 @@ public class Model {
 		boolean row = checkRow(i);
 		if (col) {
 			crossColumn(j);
-			scorePlayer1 += (board.length - j - 1);
+			if(player) {
+				scorePlayer1 += (board.length - j - 1);}else {
+					scorePlayer2 += (board.length - j - 1);
+				}
 		}
 		if (row) {
 			crossRow(i);
-			scorePlayer1 += (i+1);
+			if(player) {
+				scorePlayer1 += (i + 1);}else {
+					scorePlayer2 += (i + 1);
+				}
 		}
 		if(counterBoth == numberOfFields()) {
 			end = true;
 		}
-		System.out.println("counter:"+counterBoth);
+		
 		}
+		System.out.println("counter:"+counterBoth);
 	}
 	
 	private int numberOfFields() {
 		int i = board.length-1;
-		System.out.println(i);
+		
 		int x=0;
 		while(i>0) {
 			x = x+i;
 			i--;
 		}
+		System.out.println(x);
 		return x;
+		
 	}
 	
 	private void clear() {

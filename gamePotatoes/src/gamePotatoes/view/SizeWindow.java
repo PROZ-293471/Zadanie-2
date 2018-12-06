@@ -14,7 +14,7 @@ public class SizeWindow{
 	ChoiceDialog<String> dialog;
 	
 
-	SizeWindow(){
+	public SizeWindow(){
 	options.add("5");
 	options.add("10");
 	options.add("15");

@@ -1,4 +1,4 @@
-package gamePotatoes.view;
+package gamePotatoes.controler;
 
 public class Coordinates {
 	
@@ -6,15 +6,15 @@ public class Coordinates {
 		return coordinates.indexOf(",");
 	}
 
-	static int getRow(String coordinates) {
+	public static int getRow(String coordinates) {
 		return Integer.parseInt(coordinates.substring(0, getCommaPosition(coordinates)));
 	}
 	
-	static int getColumn(String coordinates) {
+	public static int getColumn(String coordinates) {
 		return Integer.parseInt(coordinates.substring((getCommaPosition(coordinates))+1));
 	}
 	
-	static String createCoordinates(int i, int j) {
+	public static String createCoordinates(int i, int j) {
 		
 		return Integer.toString(i)+","+Integer.toString(j);
 	}
