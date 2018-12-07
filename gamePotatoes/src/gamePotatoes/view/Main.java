@@ -4,7 +4,6 @@ import javax.jms.JMSException;
 
 import gamePotatoes.controler.Consumer;
 import gamePotatoes.controler.Controler;
-import gamePotatoes.controler.MessageControler;
 import gamePotatoes.controler.Producer;
 import javafx.application.Application;
 import javafx.scene.Scene;
@@ -30,7 +29,7 @@ public class Main extends Application {
 		SizeWindow dialog = new SizeWindow();
 		NameWindow name = new NameWindow();
 
-		MessageControler controler = new MessageControler(dialog.getSize(), name.getName(), primaryStage);
+		Controler controler = new Controler(dialog.getSize(), name.getName(), primaryStage);
 		/*scene = controller.getPanel().getScene();
 		primaryStage.setTitle("Game of Potatoes");
 		primaryStage.setScene(scene);

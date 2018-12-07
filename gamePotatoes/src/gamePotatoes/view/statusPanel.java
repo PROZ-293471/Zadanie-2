@@ -30,6 +30,11 @@ public class statusPanel extends VBox{
 		return name;
 	}
 	
+	public void setName(String nam) {
+		name = nam;
+		update();
+	}
+	
 	
 	public void updateResult(int x) {
 		value=x;
