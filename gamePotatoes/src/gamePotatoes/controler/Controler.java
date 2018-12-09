@@ -27,7 +27,7 @@ public final class Controler {
 	static private String name1;
 	private static String name2 = "Player";
 	//flag representing whose turn is it
-	public static boolean myMove = true;
+	public static boolean myMove;
 	//message managing
 	static Producer producer;
 	Consumer consumer;
@@ -90,6 +90,7 @@ public final class Controler {
 							try {
 								name2 = ((TextMessage) message).getText();
 								panel.getStatusPanel2().setName(name2);
+								updateStatusPanel();
 							} catch (JMSException e) {
 								e.printStackTrace();
 							}
@@ -275,6 +276,7 @@ public final class Controler {
 		setActionsToPotatoeButtons();
 		panel.getStatusPanel2().setName(name2);
 		panel.getStatusPanel1().setName(name1);
+		updateStatusPanel();
 	}
 
 }
