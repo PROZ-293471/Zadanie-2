@@ -14,21 +14,24 @@ import javafx.stage.Stage;
 
 public final class Controler {
 
-	public boolean myMove = true;
-
+	
+	//size of the gameboard used to initialize Model and view
+	static private int size;
+	//model managing
 	static Model model;
+	//view managing
 	static Panel panel;
 	static AgainWindow again;
-
 	static private Stage primaryStage;
-	static private int size;
+	//player names
 	static private String name1;
-	private String name2 = "Player";
-
-	Controler controler;
+	private static String name2 = "Player";
+	//flag representing whose turn is it
+	public static boolean myMove = true;
+	//message managing
 	static Producer producer;
 	Consumer consumer;
-	int counter = 0;
+	int messageCounter = 0;
 
 	/**
 	 * Initializes View and Model, sets Actions to the Buttons
@@ -38,49 +41,66 @@ public final class Controler {
 	 * @param stage the base of the display
 	 * @throws JMSException
 	 */
-	public Controler(int _size, String _name, Stage stage) throws JMSException {
+	public Controler( String _name, int _size, Stage stage, String producerQueue, String consumerQueue, boolean player) {
+		//initialization of the objects
 		model = new Model(_size);
-		panel = new Panel(_size, _name);
+		panel = new Panel(_size);
 		size = _size;
 		name1 = _name;
 		panel.getStatusPanel2().setName(name2);
+		panel.getStatusPanel1().setName(name1);
 		primaryStage = stage;
 		primaryStage.setTitle("Game of Potatoes");
 		primaryStage.setScene(panel.getScene());
 		primaryStage.show();
+		updateStatusPanel();
 		setActionsToPotatoeButtons();
-
-		producer = new Producer("localhost:4848/jms", "WSQueue");
+		//setting the player (true - first turn, false - second turn)
+		myMove = player;
+		//initialization of message managing
+		try {
+			producer = new Producer("localhost:4848/jms", producerQueue);
+		} catch (JMSException e) {
+			AlertWindow.showAlert("Problem occured when tried to connect to a server!");
+		}
 		producer.sendQueueMessage(name1);
-		consumer = new Consumer("localhost:4848/jms", "ATJQueue");
+		try {
+			consumer = new Consumer("localhost:4848/jms", consumerQueue);
+		} catch (JMSException e) {
+			AlertWindow.showAlert("Problem occured when tried to connect to a server!");
+		}
 		consumer.getJMSConsumer().setMessageListener(new Listener());
 	}
 
+	/**
+	 * 
+	 * @author Rafal
+	 *implements onMessage method
+	 */
 	private class Listener implements MessageListener {
-		
 
 		@Override
 		public void onMessage(Message message) {
 			if (message instanceof TextMessage)
 				try {
-					if (counter == 0) {
-						Platform.runLater(()->{
+					
+					//very first message - message with the second player name
+					if (messageCounter == 0) {
+						Platform.runLater(() -> {
 							try {
-								name2 =   ((TextMessage) message).getText();
+								name2 = ((TextMessage) message).getText();
 								panel.getStatusPanel2().setName(name2);
 							} catch (JMSException e) {
-								// TODO Auto-generated catch block
 								e.printStackTrace();
 							}
 						});
-						counter++;
+						messageCounter++;
+						//second player move
 					} else {
-
-						System.out.printf("Ruch:'%s'%n", ((TextMessage) message).getText());
 						String coordinates = ((TextMessage) message).getText();
-						System.out.printf("Ruch:'%s'%n", coordinates);
 						Platform.runLater(() -> move(coordinates, false));
 					}
+					
 				} catch (JMSException e) {
 					e.printStackTrace();
 				}
@@ -96,8 +116,14 @@ public final class Controler {
 			for (int j = 0; j <= i; j++) {
 				int ii = i;
 				int jj = j;
-				panel.getPotatoBoard().getPotatoButton(i, j)
-						.setOnAction(e -> move(panel.getPotatoBoard().getPotatoButton(ii, jj).getCoordinates(), true));
+				panel.getPotatoBoard().getPotatoButton(i, j).setOnAction(e -> {
+					//move is enabled only when it is first player turn
+					if(myMove==true) {
+					move(panel.getPotatoBoard().getPotatoButton(ii, jj).getCoordinates(), true);
+					}else {
+						AlertWindow.showAlert("It is not your turn!");
+					}
+				});
 			}
 		}
 
@@ -109,7 +135,7 @@ public final class Controler {
 	 * @param coordinates coordinates in the board in the form of string
 	 */
 	static void move(String coordinates, boolean player) {
-
+		//sending message only if it is first player turn
 		if (player == true) {
 			producer.sendQueueMessage(coordinates);
 		}
@@ -124,10 +150,15 @@ public final class Controler {
 	 * @param column coordinate in the board
 	 */
 	static private void move(int row, int column, boolean player) {
+		//making a turn in model
 		model.move(row, column, player);
-		panel.getStatusPanel1().updateResult(model.getScorePlayer1());
-		panel.getStatusPanel2().updateResult(model.getScorePlayer2());
+		//setting the flag - turn of another player
+		myMove = !myMove;
+		//updating the view
+		updateStatusPanel();
 		updatePotatoBoard();
+		
+		//special actions - end of the game or double clicked button
 		if (model.ifEnd() == true) {
 			if (model.getScorePlayer1() > model.getScorePlayer2()) {
 				again = new AgainWindow(panel.getStatusPanel1().getName());
@@ -145,6 +176,23 @@ public final class Controler {
 			AlertWindow.showAlert("This Potatoe was already clicked!");
 		}
 
+	}
+	
+	
+	/**
+	 * updating the score and setting the red font for currently moving player
+	 */
+	private static void updateStatusPanel() {
+		panel.getStatusPanel1().updateResult(model.getScorePlayer1());
+		panel.getStatusPanel2().updateResult(model.getScorePlayer2());
+		
+		if(myMove==true) {
+			panel.getStatusPanel1().redFont();
+			panel.getStatusPanel2().blackFont();
+		}else {
+			panel.getStatusPanel2().redFont();
+			panel.getStatusPanel1().blackFont();
+		}
 	}
 
 	/**
@@ -220,11 +268,13 @@ public final class Controler {
 	 */
 	private static void again() {
 		model = new Model(size);
-		panel = new Panel(size, name1);
+		panel = new Panel(size);
 		primaryStage.setTitle("Game of Potatoes");
 		primaryStage.setScene(panel.getScene());
 		primaryStage.show();
 		setActionsToPotatoeButtons();
+		panel.getStatusPanel2().setName(name2);
+		panel.getStatusPanel1().setName(name1);
 	}
 
 }

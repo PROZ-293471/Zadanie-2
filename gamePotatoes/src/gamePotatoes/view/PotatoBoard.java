@@ -9,14 +9,21 @@ import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
-
+/**
+ * 
+ * @author Rafal
+ *Managing the view of the triangular potato board
+ */
 public class PotatoBoard extends FlowPane{
 
 	private PotatoButton[][] potatoes;
 	private HBox[] rows;
 	private VBox vbox;
 	private int sizee;
-
+/**
+ * Initialization of the board
+ * @param size size of the board
+ */
 public PotatoBoard(int size) {
 		sizee = size;
 		rows = new HBox[size];

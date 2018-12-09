@@ -1,5 +1,7 @@
 package gamePotatoes.view;
 
+import java.net.ConnectException;
+
 import javax.jms.JMSException;
 
 import gamePotatoes.controler.Consumer;
@@ -14,26 +16,20 @@ public class Main extends Application {
 	
 	Scene scene;
 
-	public static void main(String[] args) throws JMSException, InterruptedException {
+	public static void main(String[] args){
 
-		/*Producer producer = new Producer("localhost:4848/jms", "WSQueue");
-		Consumer consumer = new Consumer("localhost:4848/jms", "ATJQueue");
-		  producer.sendQueueMessage("POTATOE");
-		  consumer.receiveQueueMessageAsync();*/
-		launch(args);
+	launch(args);
 	}
 
 	@Override
-	public void start(Stage primaryStage) throws Exception {
-		// TODO Auto-generated method stub
-		SizeWindow dialog = new SizeWindow();
-		NameWindow name = new NameWindow();
+	public void start(Stage primaryStage){
 
-		Controler controler = new Controler(dialog.getSize(), name.getName(), primaryStage);
-		/*scene = controller.getPanel().getScene();
-		primaryStage.setTitle("Game of Potatoes");
-		primaryStage.setScene(scene);
-		primaryStage.show();*/
+		
+		NameWindow name = new NameWindow();
+		SizeWindow dialog = new SizeWindow();
+		//first player: "WSQueue", "ATJQueue", true
+		//second player: "ATJQueue", "WSQueue", false
+		Controler controler = new Controler( name.getName(), dialog.getSize(), primaryStage, "WSQueue", "ATJQueue", true);
 	}
 
 }

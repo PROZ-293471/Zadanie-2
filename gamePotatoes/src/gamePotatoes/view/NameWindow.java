@@ -7,6 +7,11 @@ import java.util.Optional;
 import javafx.scene.control.ChoiceDialog;
 import javafx.scene.control.TextInputDialog;
 
+/**
+ * Managing the view of the window in which name is typed
+ * @author Rafal
+ *
+ */
 public class NameWindow {
 String size;
 	

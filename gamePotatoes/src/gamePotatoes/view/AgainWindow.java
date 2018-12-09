@@ -5,7 +5,11 @@ import java.util.Optional;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
-
+/**
+ * 
+ * @author Rafal
+ *Class representing the window displayed after the end of the game
+ */
 public class AgainWindow {
 	Alert alert = new Alert(AlertType.CONFIRMATION);
 	
