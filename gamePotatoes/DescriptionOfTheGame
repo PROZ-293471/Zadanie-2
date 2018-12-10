@@ -1,0 +1,37 @@
+/**
+ * Reguły gry: Gra polega na tym, że gracze na zmiane zaznaczają "ziemniaki" na
+ * planszy. Ten gracz, który jako ostatni zaznaczy "ziemniaka" w kolumnie lub
+ * rzędzie zdobywa tyle punktów ile było łącznie "ziemniaków" w tej kolumnie lub
+ * rzędzie. Gra toczy się do momentu aż wszystkie ziemniaki zostaną zaznaczone.
+ * Wygrywa gracz, który na końcu rozgrywki ma więcej punktów na koncie.
+ * 
+ * Ogólny opis architektury projektu:
+ * 
+ * Pierwszy gracz wybiera nazwę i rozmiar planszy i przesyła asynchronicznie do
+ * gracza drugiego. Drugi gracz wybiera nazwę i ewentualnie czeka aż gracz 1
+ * wybierze rozmiar planszy
+ * 
+ * Po kliknięciu kontroler przekazuje do klasy modelu współrzędne "ziemniaka",
+ * który został naciśnięty. Oraz wysyła te same współrzędne asynchronicznie do
+ * drugiego gracza.
+ * 
+ * Model sprawdza, czy dane pole nie było wcześniej naciśnięte i wylicza jakie
+ * zmiany powinny zajść na planszy, zapisuje je.
+ * 
+ * Kontroler odczytuje zmiany wyliczone przez model i wywołuje odpowiednie
+ * funkcje widoku zmieniające jego stan.
+ * 
+ * Kontroler blokuje możliwość ruchu do czasu aż ruch nie zostanie wykonany
+ * przez przeciwnika. Współrzędne pola wybranego przez przeciwnika są przesyłane
+ * asynchronicznie i przekazywane przez kontroler do modelu, który podobnie jak
+ * przy własnym ruchu zapisuje zmiany, które kontroler następnie aplikuje do
+ * widoku.
+ * 
+ * Programy graczy różnią się jedynie parametrami konstruktora Controlera w metodzie start:
+ * 
+ * Gracz 1: Controler(name.getName(), primaryStage, "WSQueue", "ATJQueue", true);
+ * Gracz 2: Controler(name.getName(), primaryStage, "ATJQueue", "WSQueue", false);
+ * 
+ * @author Rafal
+ * 
+ */
