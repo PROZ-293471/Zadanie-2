@@ -42,7 +42,7 @@ public class Panel {
 		borderPane.setMargin(player1, new Insets(20));
 		borderPane.setRight(player2);
 		borderPane.setMargin(player2, new Insets(20));
-		scene = new Scene(borderPane, 360+size*20, 50+size*25);
+		scene = new Scene(borderPane, 500+size*20, 50+size*25);
 	};
 
 	public Scene getScene() {

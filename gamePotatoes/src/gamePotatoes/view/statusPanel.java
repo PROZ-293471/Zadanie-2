@@ -25,7 +25,7 @@ public class statusPanel extends VBox{
 		result.setFont(Font.font(18));
 		value = 0;
 		update();
-		this.setPrefWidth(100);
+		this.setPrefWidth(130);
 		this.getChildren().addAll(player, result);
 		
 	}

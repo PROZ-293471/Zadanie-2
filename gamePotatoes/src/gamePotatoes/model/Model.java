@@ -5,8 +5,12 @@ import java.util.List;
 
 import gamePotatoes.controler.Coordinates;
 import javafx.scene.layout.HBox;
-
-public class Model {
+/**
+ * 
+ * @author Rafal
+ * computing the states after the turn and writing them to the lists of orders
+ */
+public final class Model {
 	// possible states of the field
 	enum state {
 		EMPTY, DOT, ROW, COLUMN, BOTH

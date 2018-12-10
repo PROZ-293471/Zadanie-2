@@ -9,29 +9,32 @@ import gamePotatoes.model.Model;
 import gamePotatoes.view.AgainWindow;
 import gamePotatoes.view.AlertWindow;
 import gamePotatoes.view.Panel;
+import gamePotatoes.view.SizeWindow;
 import javafx.application.Platform;
+import javafx.scene.Scene;
+import javafx.scene.control.Label;
 import javafx.stage.Stage;
 
 public final class Controler {
 
-	
-	//size of the gameboard used to initialize Model and view
+	// size of the gameboard used to initialize Model and view
 	static private int size;
-	//model managing
+	// model managing
 	static Model model;
-	//view managing
+	// view managing
+	SizeWindow dialog = new SizeWindow();
 	static Panel panel;
 	static AgainWindow again;
 	static private Stage primaryStage;
-	//player names
+	// player names
 	static private String name1;
 	private static String name2 = "Player";
-	//flag representing whose turn is it
+	// flag representing whose turn is it
 	public static boolean myMove;
-	//message managing
+	// message managing
 	static Producer producer;
 	Consumer consumer;
-	int messageCounter = 0;
+	static int messageCounter = 0;
 
 	/**
 	 * Initializes View and Model, sets Actions to the Buttons
@@ -39,25 +42,13 @@ public final class Controler {
 	 * @param _size size of the game board
 	 * @param _name name of the player
 	 * @param stage the base of the display
+	 * @throws InterruptedException
 	 * @throws JMSException
 	 */
-	public Controler( String _name, int _size, Stage stage, String producerQueue, String consumerQueue, boolean player) {
-		//initialization of the objects
-		model = new Model(_size);
-		panel = new Panel(_size);
-		size = _size;
+	public Controler(String _name, Stage stage, String producerQueue, String consumerQueue, boolean player)
+			throws InterruptedException {
+		// initialization of message managing
 		name1 = _name;
-		panel.getStatusPanel2().setName(name2);
-		panel.getStatusPanel1().setName(name1);
-		primaryStage = stage;
-		primaryStage.setTitle("Game of Potatoes");
-		primaryStage.setScene(panel.getScene());
-		primaryStage.show();
-		updateStatusPanel();
-		setActionsToPotatoeButtons();
-		//setting the player (true - first turn, false - second turn)
-		myMove = player;
-		//initialization of message managing
 		try {
 			producer = new Producer("localhost:4848/jms", producerQueue);
 		} catch (JMSException e) {
@@ -70,12 +61,38 @@ public final class Controler {
 			AlertWindow.showAlert("Problem occured when tried to connect to a server!");
 		}
 		consumer.getJMSConsumer().setMessageListener(new Listener());
+
+		// initialization of the objects
+		primaryStage = stage;
+		primaryStage.setTitle("Game of Potatoes");
+		
+		if (player == true) {
+			size = dialog.getSize();
+			producer.sendQueueMessage(Integer.toString(size));
+		} else {
+			while (messageCounter != 2) {
+				
+				Thread.sleep(1);
+			}
+		}
+		model = new Model(size);
+		panel = new Panel(size);
+		
+		panel.getStatusPanel2().setName(name2);
+		panel.getStatusPanel1().setName(name1);
+		
+		primaryStage.setScene(panel.getScene());
+		primaryStage.show();
+		updateStatusPanel();
+		setActionsToPotatoeButtons();
+		// setting the player (true - first turn, false - second turn)
+		myMove = player;
+
 	}
 
 	/**
 	 * 
-	 * @author Rafal
-	 *implements onMessage method
+	 * @author Rafal implements onMessage method
 	 */
 	private class Listener implements MessageListener {
 
@@ -83,9 +100,10 @@ public final class Controler {
 		public void onMessage(Message message) {
 			if (message instanceof TextMessage)
 				try {
-					
-					//very first message - message with the second player name
-					if (messageCounter == 0) {
+
+					// very first message - message with the second player name
+					switch(messageCounter) { 
+					case 0:
 						Platform.runLater(() -> {
 							try {
 								name2 = ((TextMessage) message).getText();
@@ -96,12 +114,24 @@ public final class Controler {
 							}
 						});
 						messageCounter++;
-						//second player move
-					} else {
+						if(myMove==true) {
+							messageCounter++;
+						}
+						break;
+					case 1:
+						try {
+							size = Integer.parseInt(((TextMessage) message).getText());
+						} catch (JMSException e) {
+							e.printStackTrace();
+						}
+						messageCounter++;
+						break;
+						// second player move
+					default:
 						String coordinates = ((TextMessage) message).getText();
 						Platform.runLater(() -> move(coordinates, false));
-					}
-					
+						break;}
+
 				} catch (JMSException e) {
 					e.printStackTrace();
 				}
@@ -118,11 +148,11 @@ public final class Controler {
 				int ii = i;
 				int jj = j;
 				panel.getPotatoBoard().getPotatoButton(i, j).setOnAction(e -> {
-					//move is enabled only when it is first player turn
-					if(myMove==true) {
-					move(panel.getPotatoBoard().getPotatoButton(ii, jj).getCoordinates(), true);
-					}else {
-						AlertWindow.showAlert("It is not your turn!");
+					// move is enabled only when it is first player turn
+					if (myMove == true && messageCounter != 0) {
+						move(panel.getPotatoBoard().getPotatoButton(ii, jj).getCoordinates(), true);
+					} else {
+						AlertWindow.showAlert("Waiting for the opponent!");
 					}
 				});
 			}
@@ -136,7 +166,7 @@ public final class Controler {
 	 * @param coordinates coordinates in the board in the form of string
 	 */
 	static void move(String coordinates, boolean player) {
-		//sending message only if it is first player turn
+		// sending message only if it is first player turn
 		if (player == true) {
 			producer.sendQueueMessage(coordinates);
 		}
@@ -151,15 +181,15 @@ public final class Controler {
 	 * @param column coordinate in the board
 	 */
 	static private void move(int row, int column, boolean player) {
-		//making a turn in model
+		// making a turn in model
 		model.move(row, column, player);
-		//setting the flag - turn of another player
+		// setting the flag - turn of another player
 		myMove = !myMove;
-		//updating the view
+		// updating the view
 		updateStatusPanel();
 		updatePotatoBoard();
-		
-		//special actions - end of the game or double clicked button
+
+		// special actions - end of the game or double clicked button
 		if (model.ifEnd() == true) {
 			if (model.getScorePlayer1() > model.getScorePlayer2()) {
 				again = new AgainWindow(panel.getStatusPanel1().getName());
@@ -178,19 +208,18 @@ public final class Controler {
 		}
 
 	}
-	
-	
+
 	/**
 	 * updating the score and setting the red font for currently moving player
 	 */
 	private static void updateStatusPanel() {
 		panel.getStatusPanel1().updateResult(model.getScorePlayer1());
 		panel.getStatusPanel2().updateResult(model.getScorePlayer2());
-		
-		if(myMove==true) {
+
+		if (myMove == true) {
 			panel.getStatusPanel1().redFont();
 			panel.getStatusPanel2().blackFont();
-		}else {
+		} else {
 			panel.getStatusPanel2().redFont();
 			panel.getStatusPanel1().blackFont();
 		}
