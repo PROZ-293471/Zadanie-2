@@ -1,9 +1,13 @@
 /**
- * Reguły gry: Gra polega na tym, że gracze na zmiane zaznaczają "ziemniaki" na
+ * Reguły gry: 
+ *
+ * Gra polega na tym, że gracze na zmiane zaznaczają "ziemniaki" na
  * planszy. Ten gracz, który jako ostatni zaznaczy "ziemniaka" w kolumnie lub
  * rzędzie zdobywa tyle punktów ile było łącznie "ziemniaków" w tej kolumnie lub
  * rzędzie. Gra toczy się do momentu aż wszystkie ziemniaki zostaną zaznaczone.
  * Wygrywa gracz, który na końcu rozgrywki ma więcej punktów na koncie.
+ * 
+ *
  * 
  * Ogólny opis architektury projektu:
  * 
