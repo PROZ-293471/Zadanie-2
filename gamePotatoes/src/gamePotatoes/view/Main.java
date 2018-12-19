@@ -57,7 +57,6 @@ public class Main extends Application {
 		int boardSize = 10;
 		NameWindow name = new NameWindow();
 		PlayerChoiceWindow player = new PlayerChoiceWindow();
-		// SizeWindow dialog = new SizeWindow();
 		// first player: "WSQueue", "ATJQueue", true
 		// second player: "ATJQueue", "WSQueue", false
 		try {
