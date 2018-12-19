@@ -1,10 +1,7 @@
 package gamePotatoes.view;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
-import javafx.scene.control.ChoiceDialog;
 import javafx.scene.control.TextInputDialog;
 
 /**
@@ -22,8 +19,8 @@ String size;
 
 	dialog = new TextInputDialog("Player");
 	dialog.setTitle("Game of potatoes");
-	dialog.setHeaderText("Ustawienia gry");
-	dialog.setContentText("Podaj nazwê gracza:");
+	dialog.setHeaderText("Game Settings");
+	dialog.setContentText("Insert your name:");
 	}
 	
 	public String getName() {

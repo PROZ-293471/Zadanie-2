@@ -2,13 +2,8 @@ package gamePotatoes.view;
 
 
 import javafx.geometry.Insets;
-import javafx.geometry.Orientation;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.FlowPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
 /**
  * 
  * @author Rafal
@@ -19,7 +14,6 @@ public class Panel {
 	private Scene scene;
 	private BorderPane borderPane = new BorderPane();
 	private PotatoBoard potatoBoard;
-	private Label Title = new Label("Game of Potatoes");
 	private statusPanel player1 = new statusPanel("player 1");
 	private statusPanel player2 = new statusPanel("player 2");
 	
@@ -34,6 +28,7 @@ public class Panel {
 	 * Initialization of the new board, calculating the size of the window
 	 * @param size size of the potato board
 	 */
+	@SuppressWarnings("static-access")
 	public Panel(int size) {
 		potatoBoard = new PotatoBoard(size);
 		borderPane.setCenter(potatoBoard);

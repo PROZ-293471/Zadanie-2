@@ -5,40 +5,37 @@ import java.util.List;
 import java.util.Optional;
 
 import javafx.scene.control.ChoiceDialog;
-import javafx.scene.control.TextInputDialog;
 /**
  * 
  * @author Rafal
- *Managing the view of the window in which size of the board is selected
+ *Managing the view of the window in which the player is chosen 
  */
-public class SizeWindow{
+
+public class PlayerChoiceWindow{
 	String size;
 	
 	private List<String> options = new ArrayList<String>();
 	ChoiceDialog<String> dialog;
 	
 
-	public SizeWindow(){
-	options.add("5");
-	options.add("10");
-	options.add("15");
-	options.add("20");
-	options.add("25");
-	dialog = new ChoiceDialog<>("5",options);
+	public PlayerChoiceWindow(){
+	options.add("Player 1");
+	options.add("Player 2");
+	dialog = new ChoiceDialog<>("Player 1",options);
 	dialog.setTitle("Game of potatoes");
-	dialog.setHeaderText("Ustawienia gry");
-	dialog.setContentText("Set the board size:");
+	dialog.setHeaderText("Game Settings");
+	dialog.setContentText("Choose the player:");
 	}
 	/**
 	 * 
 	 * @return selected size
 	 */
-	public int getSize() {
-		int value = 0;
+	public String getPlayer() {
+		String player = "Player 1";
 		Optional<String> result = dialog.showAndWait();
 		if (result.isPresent()){
-		    value=Integer.parseInt(result.get());
+		    player=result.get();
 		}
-		return value;
+		return player;
 	}
 }

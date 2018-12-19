@@ -1,12 +1,6 @@
 package gamePotatoes.view;
 
-import java.net.ConnectException;
-
-import javax.jms.JMSException;
-
-import gamePotatoes.controler.Consumer;
 import gamePotatoes.controler.Controler;
-import gamePotatoes.controler.Producer;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -40,10 +34,9 @@ import javafx.stage.Stage;
  * przy w³asnym ruchu zapisuje zmiany, które kontroler nastêpnie aplikuje do
  * widoku.
  * 
- * Programy graczy ró¿ni¹ siê jedynie parametrami konstruktora Controlera w metodzie start:
- * 
- * Gracz 1: Controler(name.getName(), primaryStage, "WSQueue", "ATJQueue", true);
- * Gracz 2: Controler(name.getName(), primaryStage, "ATJQueue", "WSQueue", false);
+ * W jednej z instancji programu w oknie dialogowym "WindowPlayer" nale¿y wybraæ
+ * Player1 a w drugiej Player2, wywo³a konstruktor kontrolera z odpowiednimi
+ * parametrami
  * 
  * @author Rafal
  * 
@@ -57,15 +50,24 @@ public class Main extends Application {
 		launch(args);
 	}
 
+	@SuppressWarnings("unused")
 	@Override
 	public void start(Stage primaryStage) {
 
+		int boardSize = 10;
 		NameWindow name = new NameWindow();
+		PlayerChoiceWindow player = new PlayerChoiceWindow();
 		// SizeWindow dialog = new SizeWindow();
 		// first player: "WSQueue", "ATJQueue", true
 		// second player: "ATJQueue", "WSQueue", false
 		try {
-			Controler controler = new Controler(name.getName(), primaryStage, "WSQueue", "ATJQueue", true);
+			if (player.getPlayer().equals("Player 1")) {
+				Controler controler = new Controler(name.getName(), boardSize, primaryStage, "WSQueue", "ATJQueue",
+						true);
+			} else {
+				Controler controler = new Controler(name.getName(), boardSize, primaryStage, "ATJQueue", "WSQueue",
+						false);
+			}
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import gamePotatoes.controler.Coordinates;
-import javafx.scene.layout.HBox;
 /**
  * 
  * @author Rafal
